@@ -95,6 +95,14 @@ void SimpleEQAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+    
+    juce::dsp::ProcessSpec spec;
+    spec.maximumBlockSize = samplesPerBlock;
+    spec.sampleRate = sampleRate;
+    spec.numChannels = 1;
+    
+    leftChain.prepare(spec);
+    rightChain.prepare(spec);
 }
 
 void SimpleEQAudioProcessor::releaseResources()
@@ -152,7 +160,7 @@ void SimpleEQAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
     // interleaved by keeping the same state.
     for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
-        auto* channelData = buffer.getWritePointer (channel);
+//        auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
     }

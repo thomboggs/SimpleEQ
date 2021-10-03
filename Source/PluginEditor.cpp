@@ -159,11 +159,13 @@ void SimpleEQAudioProcessorEditor::timerCallback()
 {
     if (parametersChanged.compareAndSetBool(false, true))
     {
-        DBG("Params Changed");
+//        DBG("Params Changed");
         // update the monochain
         auto chainSettings = getChainSettings(audioProcessor.apvts);
         auto peakCoefficients = makePeakFilter(chainSettings, audioProcessor.getSampleRate());
         updateCoefficients(monoChain.get<ChainPositions::Peak>().coefficients, peakCoefficients);
+        
+        
         
         // signal a repaint
         repaint();

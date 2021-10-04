@@ -245,6 +245,10 @@ private:
     
     FFTDataGenerator<std::vector<float>> leftChannelFFTDataGenerator;
     
+    AnalyzerPathGenerator<juce::Path> pathProducer;
+    
+    juce::Path leftChannelFFTPath;
+    
 //    SingleChannelSampleFifo<SimpleEQAudioProcessor::BlockType>* rightChannelFifo;
     
      

@@ -254,6 +254,11 @@ juce::Timer
     
     void paint (juce::Graphics& g) override;
     void resized () override;
+    
+    void toggleAnalysisEnablement ( bool enabled )
+    {
+        shouldShowFFTAnalysis = enabled;
+    }
  
 private:
     SimpleEQAudioProcessor& audioProcessor;
@@ -270,6 +275,7 @@ private:
     
     PathProducer leftPathProducer, rightPathProducer;
     
+    bool shouldShowFFTAnalysis = true;
     
     
 //    SingleChannelSampleFifo<SimpleEQAudioProcessor::BlockType>* rightChannelFifo;

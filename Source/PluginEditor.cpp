@@ -21,10 +21,12 @@ void LookAndFeel::drawRotarySlider (juce::Graphics& g,
     
     auto bounds = Rectangle<float>(x, y, width, height);
     
-    g.setColour(Colour(97u, 18u, 167));
+    auto enabled = slider.isEnabled();
+    
+    g.setColour(enabled ? Colour(97u, 18u, 167) : Colours::darkgrey);
     g.fillEllipse(bounds);
     
-    g.setColour(Colour(255u, 154u, 1u));
+    g.setColour(enabled ? Colour(255u, 154u, 1u): Colours::grey);
     g.drawEllipse(bounds, 1.f);
     
     if ( auto* rswl = dynamic_cast<RotarySliderWithLabels*>(&slider))
@@ -104,7 +106,7 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         g.drawEllipse(r.toFloat(), 2.f);
     }
     
-    else if ( auto* ab = dynamic_cast<AnalyzerButton*>(&toggleButton))
+    else if ( auto* analyzerButton = dynamic_cast<AnalyzerButton*>(&toggleButton))
     {
         auto color = toggleButton.getToggleState() ?  Colour(0u, 172u, 1u) : Colours::dimgrey;
         g.setColour(color);
@@ -116,16 +118,16 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         
         Path randomPath;
         
-        Random r;
+//        Random r;
+//        
+//        randomPath.startNewSubPath(insetRect.getX(),
+//                                   insetRect.getY() + insetRect.getHeight() * r.nextFloat());
+//        for ( auto x = insetRect.getX() + 1; x < insetRect.getRight(); x += 2)
+//        {
+//            randomPath.lineTo(x, insetRect.getY() + insetRect.getHeight() * r.nextFloat());
+//        }
         
-        randomPath.startNewSubPath(insetRect.getX(),
-                                   insetRect.getY() + insetRect.getHeight() * r.nextFloat());
-        for ( auto x = insetRect.getX() + 1; x < insetRect.getRight(); x += 2)
-        {
-            randomPath.lineTo(x, insetRect.getY() + insetRect.getHeight() * r.nextFloat());
-        }
-        
-        g.strokePath(randomPath, PathStrokeType(1.f));
+        g.strokePath(analyzerButton->randomPath, PathStrokeType(1.f));
         
     }
 }
@@ -668,8 +670,45 @@ SimpleEQAudioProcessorEditor::SimpleEQAudioProcessorEditor (SimpleEQAudioProcess
     peakBypassButton.setLookAndFeel(&lnf);
     lowCutBypassButton.setLookAndFeel(&lnf);
     highCutBypassButton.setLookAndFeel(&lnf);
-    
     analyzerEnableButton.setLookAndFeel(&lnf);
+    
+    auto safePtr = juce::Component::SafePointer<SimpleEQAudioProcessorEditor>(this);
+    peakBypassButton.onClick = [safePtr]()
+    {
+        if ( auto* comp = safePtr.getComponent() )
+        {
+            auto bypassed = comp->peakBypassButton.getToggleState();
+            
+            comp->peakFreqSlider.setEnabled(!bypassed);
+            comp->peakGainSlider.setEnabled(!bypassed);
+            comp->peakQualitySlider.setEnabled(!bypassed);
+            
+        }
+    };
+    
+    lowCutBypassButton.onClick = [safePtr]()
+    {
+        if ( auto* comp = safePtr.getComponent() )
+        {
+            auto bypassed = comp->lowCutBypassButton.getToggleState();
+            
+            comp->lowCutFreqSlider.setEnabled(!bypassed);
+            comp->lowCutSlopeSlider.setEnabled(!bypassed);
+            
+        }
+    };
+    
+    highCutBypassButton.onClick = [safePtr]()
+    {
+        if ( auto* comp = safePtr.getComponent() )
+        {
+            auto bypassed = comp->highCutBypassButton.getToggleState();
+            
+            comp->highCutFreqSlider.setEnabled(!bypassed);
+            comp->highCutSlopeSlider.setEnabled(!bypassed);
+            
+        }
+    };
     
     
     setSize (600, 480);

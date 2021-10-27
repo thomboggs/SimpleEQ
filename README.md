@@ -6,3 +6,4 @@ This tutorial is solely to learn different functionality. There are many things 
 - Fix Code organization. Separate out classes to different files. 
 - Create and destroy filter coefficients on a different thread other than the audio thread. 
 
+https://www.programmingformusicians.com/simpleeq/
